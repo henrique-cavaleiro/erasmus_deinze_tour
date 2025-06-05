@@ -1,27 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>erasmus deinze tour</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
-</head>
-<body>
-    <!-- Paste the ThingLink embed code here -->
-    <iframe width="960" height="540" data-original-width="1920" data-original-height="1080" src="https://www.thinglink.com/view/scene/1949082906018186084" type="text/html" style="border: none;" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe><script async src="//cdn.thinglink.me/jse/responsive.js"></script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Erasmus Deinze VR Tour</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script>
+      AFRAME.registerComponent("gaze-button", {
+        init: function () {
+          let el = this.el;
+          let timer = null;
+
+          el.addEventListener("mouseenter", () => {
+            timer = setTimeout(() => {
+              // Voeg hier het virtuele toetsenbord toe
+              const keyboard = document.createElement("a-text");
+              keyboard.setAttribute("value", "⌨️ Virtueel toetsenbord geactiveerd");
+              keyboard.setAttribute("position", "0 1 -2");
+              keyboard.setAttribute("color", "white");
+              keyboard.setAttribute("align", "center");
+              keyboard.setAttribute("id", "virtual-keyboard");
+              el.sceneEl.appendChild(keyboard);
+            }, 5000);
+          });
+
+          el.addEventListener("mouseleave", () => {
+            clearTimeout(timer);
+          });
+        },
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Camera + cursor voor gaze interaction -->
+      <a-entity camera look-controls>
+        <a-entity 
+          cursor="fuse: true; fuseTimeout: 5000" 
+          position="0 0 -1" 
+          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+          material="color: white; shader: flat">
+        </a-entity>
+      </a-entity>
+
+      <!-- Zwevende knop -->
+      <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.2" height="0.5" width="1.5"
+             gaze-button>
+        <a-text value="Toetsenbord" align="center" position="0 0 0.2" color="black"></a-text>
+      </a-box>
+
+      <!-- Optioneel: vloer -->
+      <a-plane rotation="-90 0 0" width="30" height="30" color="#7BC8A4"></a-plane>
+
+      <!-- Licht -->
+      <a-light type="ambient" color="#FFF"></a-light>
+
+      <!-- Achtergrond -->
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+  </body>
 </html>
